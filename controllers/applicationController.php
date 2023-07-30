@@ -82,9 +82,10 @@
       $result = pg_query($this->db, "SELECT * FROM applications");
       if (!$result) {
         return http_response_code(400);
-      }
-      while ($application = pg_fetch_object($result)) {
-        echo var_dump($application);
+      } else {
+        while ($application = pg_fetch_object($result)) {
+          echo var_dump($application);
+        }
       }
 		}
   }
