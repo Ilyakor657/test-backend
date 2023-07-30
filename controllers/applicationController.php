@@ -33,7 +33,7 @@
         VALUES ('".$client->chief->surnameLegal."', '".$client->chief->nameLegal."',
         '".$client->chief->patronymicLegal."', '".$client->chief->innLegal."',
         '".$client->org->nameOrg."', '".$client->org->ogrn."', '".$client->org->innOrg."',
-        '".$client->org->kpp."', '".$addressString."')";
+        '".$client->org->kpp."', '".$addressString."') RETURNING id";
       } else {
         $queryString = "INSERT INTO individual (surname, name, patronymic, date_birth, inn, serial, number, date_issue)
         VALUES ('".$client->surnameIndividuals."', '".$client->nameIndividuals."',
@@ -50,14 +50,28 @@
       if ($this->id == false) {
         $this->createClient($req->client);
       }
-
-      return var_dump($this->id);
+      $queryString;
+      if ($req->client->type == 'legal') {
+        $queryString = "INSERT INTO applications (type, amount, rate, date_open, date_close, legal_id)
+        VALUES ('".$req->product->type."', '".$req->product->amount."',
+        '".$req->product->rate."', '".$req->product->dateOpen."', '".$req->product->dateClose."', 
+        '".$this->id->id."') RETURNING id";
+      } else {
+        $queryString = "INSERT INTO applications (type, amount, rate, date_open, date_close, individual_id)
+        VALUES ('".$req->product->type."', '".$req->product->amount."',
+        '".$req->product->rate."', '".$req->product->dateOpen."', '".$req->product->dateClose."', 
+        '".$this->id->id."') RETURNING id";
+      }
+      pg_query($this->db, $queryString);
+      echo 'Заявка успешно отправлена';
 		}
 
-    /*public function getApplication($req)
+    public function getApplication()
 		{
-      return var_dump($req);
-		}*/
-
+      $result = pg_query($this->db, "SELECT * FROM applications");
+      while ($application = pg_fetch_object($result)) {
+        echo var_dump($application);
+      }
+		}
   }
 ?>
