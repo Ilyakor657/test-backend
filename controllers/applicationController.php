@@ -10,6 +10,9 @@
 			$dbinfo = require 'db/dbInfo.php';
       $connectString = "host={$dbinfo['host']} port={$dbinfo['port']} dbname={$dbinfo['dbname']} user={$dbinfo['user']} password={$dbinfo['password']}";
       $this->db = pg_connect($connectString);
+      if (!$this->db) {
+        return http_response_code(400);
+      }
 		}
 
     private function checkClient($client)
@@ -41,7 +44,11 @@
         '".$client->passport->serial."', '".$client->passport->number."', '".$client->passport->dateIssue."') RETURNING id";
       }
       $result = pg_query($this->db, $queryString);
-      $this->id = pg_fetch_object($result);
+      if (!$result) {
+        return http_response_code(400);
+      } else {
+        $this->id = pg_fetch_object($result);
+      }
 		}
 
     public function createApplication($req)
@@ -62,13 +69,20 @@
         '".$req->product->rate."', '".$req->product->dateOpen."', '".$req->product->dateClose."', 
         '".$this->id->id."') RETURNING id";
       }
-      pg_query($this->db, $queryString);
-      echo 'Заявка успешно отправлена';
+      $result = pg_query($this->db, $queryString);
+      if (!$result) {
+        return http_response_code(400);
+      } else {
+        echo 'Заявка успешно отправлена';
+      }
 		}
 
     public function getApplication()
 		{
       $result = pg_query($this->db, "SELECT * FROM applications");
+      if (!$result) {
+        return http_response_code(400);
+      }
       while ($application = pg_fetch_object($result)) {
         echo var_dump($application);
       }
