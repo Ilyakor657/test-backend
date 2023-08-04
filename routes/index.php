@@ -1,3 +1,0 @@
-<?php
-  require 'ApplicationRouter.php'; 
-?>
