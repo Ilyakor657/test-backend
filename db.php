@@ -6,8 +6,12 @@
     private $user = 'postgres';
     private $password = '902109';
     private $db;
+    private $exist;
 
     public function __construct() {
+      if ($this->exist) {
+        return $this->db;
+      }
       $connectString = "
         host={$this->host} 
         port={$this->port} 
@@ -16,6 +20,7 @@
         password={$this->password}
       ";
       $this->db = pg_connect($connectString);
+      $this->exist = true; 
     }
 
     public function connect() {
