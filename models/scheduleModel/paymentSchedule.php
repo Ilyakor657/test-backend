@@ -1,5 +1,5 @@
 <?php
-  require_once 'service/dateService.php';
+  require_once 'services/dateService.php';
 
   class PaymentScheduleModel {
     private $payments = [];
