@@ -55,10 +55,10 @@
         $payment = [
           "key" => $this->key,
           "number" => $this->number,
-          "date" => $this->dateNow,
-          "amountPayment" => $this->amountPayment,
-          "percent" => $this->percent,
-          "debt" => $this->debt
+          "date" => date("d.m.Y", strtotime($this->dateNow)),
+          "amountPayment" => number_format($this->amountPayment, 2, ',', ' '),
+          "percent" => number_format($this->percent, 2, ',', ' '),
+          "debt" => number_format($this->debt, 2, ',', ' ')
         ];
         array_push($this->payments, $payment);
       }
