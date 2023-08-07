@@ -1,5 +1,5 @@
 <?php
-  include_once 'models/scheduleModel/paymentSchedule.php';
+  require_once 'models/scheduleModel/paymentSchedule.php';
 
   class ScheduleController {
     public function paymentSchedule($req) {

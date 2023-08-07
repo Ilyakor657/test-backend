@@ -1,6 +1,6 @@
 <?php
-  include_once 'models/applicationModel.php';
-  include_once 'models/clientModel.php';
+  require_once 'models/applicationModel.php';
+  require_once 'models/clientModel.php';
 
   class ApplicationController {
     private $application;
