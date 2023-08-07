@@ -4,7 +4,7 @@
     private $port = '5433';
     private $dbname = 'test';
     private $user = 'postgres';
-    private $password = '902109';
+    private $password = '';
     private $db;
     private $exist;
 
