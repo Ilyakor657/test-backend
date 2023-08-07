@@ -20,7 +20,12 @@
         password={$this->password}
       ";
       $this->db = pg_connect($connectString);
-      $this->exist = true; 
+      if (!$this->db) {
+        http_response_code(400);
+        exit;
+      } else {
+        $this->exist = true; 
+      }
     }
 
     public function connect() {
