@@ -13,7 +13,7 @@
         VALUES ('".$product->type."', '".$product->amount."',
         '".$product->rate."', '".$product->dateOpen."', '".$product->dateClose."', 
         '".$client_id."') RETURNING id";
-      $result = pg_fetch_object(pg_query($this->db, $queryString));
+      $result = pg_query($this->db, $queryString);
       if (!$result) {
         http_response_code(400);
         exit;
@@ -21,12 +21,12 @@
     }
 
     public function getApllication() {
-      $result = pg_query($this->db, "SELECT * FROM applications");
+      $result = pg_fetch_object(pg_query($this->db, "SELECT * FROM applications"));
       if (!$result) {
         http_response_code(400);
         exit;
       } 
-      while ($application = pg_fetch_object($result)) {
+      while ($application = $result) {
         echo var_dump($application);
       }
     }

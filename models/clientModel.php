@@ -14,6 +14,10 @@
         return $subject_id;
       } else {
         $client_id = pg_fetch_object(pg_query($this->db, "SELECT id FROM client WHERE subject_id='".$subject_id->id."' AND subject='".$subject."'"));
+        if (!$client_id) {
+          http_response_code(400);
+          exit;
+        }
         return $client_id->id;
       }
     }
@@ -36,14 +40,15 @@
           '".$client->passport->serial."', '".$client->passport->number."', '".$client->passport->dateIssue."') RETURNING id";
           break;  
       }
-      $subject_id = pg_fetch_object(pg_query($this->db, $queryString));
-      $client_id = pg_fetch_object(pg_query($this->db, "INSERT INTO client (subject, subject_id)
-      VALUES ('".$client->subject."', '".$subject_id->id."') RETURNING id"));
+      $subject_id = pg_query($this->db, $queryString);
+      $client_id = pg_query($this->db, "INSERT INTO client (subject, subject_id)
+      VALUES ('".$client->subject."', '".pg_fetch_object($subject_id)->id."') RETURNING id");
       if (!$subject_id || !$client_id) {
         http_response_code(400);
         exit;
+      } else {
+        return pg_fetch_object($client_id)->id;
       }
-      return $client_id->id;
     }
   } 
 ?>
