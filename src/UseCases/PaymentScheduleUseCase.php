@@ -1,7 +1,8 @@
 <?php
-  require_once 'services/dateService.php';
+  require_once 'src/Services/DateService.php';
+  require_once 'src/Models/PaymentScheduleModel.php';
 
-  class PaymentScheduleModel {
+  class PaymentScheduleUseCase {
     private $payments = [];
     private $key = 0;
     private $number = 0;
@@ -13,16 +14,17 @@
     private $period;
     private $rate;
     private $debt;
+    private $mapper;
 
-    public function __construct($amount, $period, $date, $rate) {
-      $this->period = $period;
-      $this->rate = $rate;
-      $this->dateNow = $date;
-      $this->balance = round($amount, 2);
-      $rateMonth = $rate/(100*12);
+    public function __construct($infoLoan) {
+      $this->period = $infoLoan->getPeriod();
+      $this->rate = $infoLoan->getRate();
+      $this->dateNow = $infoLoan->getDateOpen();
+      $this->balance = round($infoLoan->getAmount(), 2);
+      $rateMonth = $infoLoan->getRate()/(100*12);
       $this->amountPayment = round((
-        $amount*(($rateMonth*pow((1 + $rateMonth), $period))/
-        (pow((1 + $rateMonth), $period) - 1))
+        $infoLoan->getAmount()*(($rateMonth*pow((1 + $rateMonth), $infoLoan->getPeriod()))/
+        (pow((1 + $rateMonth), $infoLoan->getPeriod()) - 1))
       ), 2);
     }
 
@@ -62,7 +64,7 @@
         ];
         array_push($this->payments, $payment);
       }
-      return json_encode($this->payments);
+      return $this->payments;
     }
   } 
 ?>

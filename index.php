@@ -7,7 +7,7 @@
     exit;
   }
 
-  require_once 'routers/index.php';
+  require_once 'src/Http/routers/index.php';
   
   http_response_code(404);
 ?>
